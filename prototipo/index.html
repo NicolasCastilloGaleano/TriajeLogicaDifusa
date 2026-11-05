@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Triaje San Rafael</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header class="cabecera">
+    <div class="marca">
+      <span class="marca-icono" aria-hidden="true">+</span>
+      <div>
+        <h1>Triaje San Rafael</h1>
+        <p>Sistema experto difuso de apoyo a la priorización</p>
+      </div>
+    </div>
+    <nav class="pestanas" aria-label="Secciones">
+      <button class="pestana activa" data-pestana="triaje">Triaje</button>
+      <button class="pestana" data-pestana="cola">Cola <span id="contador-cola" class="contador" hidden>0</span></button>
+      <button class="pestana" data-pestana="base">Base de conocimiento</button>
+      <button class="pestana" data-pestana="arquitectura">Arquitectura</button>
+    </nav>
+  </header>
+
+  <p class="aviso-clinico" role="note">
+    <strong>Herramienta de apoyo.</strong> No reemplaza la decisión clínica. Prototipo académico con datos sintéticos, sin validación clínica.
+  </p>
+
+  <main>
+    <section id="vista-triaje" class="vista">
+      <div class="dos-columnas">
+        <form id="formulario" class="tarjeta" novalidate>
+          <div class="titulo-tarjeta">
+            <h2>Valoración inicial</h2>
+            <span class="etiqueta-codigo">Código <strong id="codigo-paciente">P-001</strong></span>
+          </div>
+
+          <div class="fila-ejemplo">
+            <label for="ejemplo">Cargar un caso de ejemplo</label>
+            <select id="ejemplo"></select>
+          </div>
+
+          <h3>Datos medidos</h3>
+          <p class="ayuda">Deje en blanco lo que no se pudo medir. El sistema no lo toma como normal.</p>
+          <div id="campos-medidos" class="rejilla-campos"></div>
+
+          <h3>Lo que dice el paciente</h3>
+          <textarea id="texto-paciente" rows="2" placeholder="Escriba la queja con sus palabras, sin nombres ni documentos"></textarea>
+          <div id="frases" class="frases"></div>
+          <div id="interpretaciones"></div>
+
+          <h3>Banderas rojas</h3>
+          <div id="banderas"></div>
+
+          <h3>Antecedentes</h3>
+          <p class="ayuda">Solo pueden subir la prioridad.</p>
+          <div id="antecedentes"></div>
+
+          <p id="error-formulario" class="error" role="alert" hidden></p>
+          <div class="acciones">
+            <button type="submit" class="boton principal">Calcular prioridad</button>
+            <button type="button" id="limpiar" class="boton">Limpiar</button>
+          </div>
+        </form>
+
+        <div id="resultado" class="resultado" aria-live="polite">
+          <div class="tarjeta vacio">
+            <h2>Resultado</h2>
+            <p>Complete la valoración y calcule la prioridad. Aquí verá el nivel sugerido, las reglas activadas y los grados de pertenencia.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="vista-cola" class="vista" hidden>
+      <div class="tarjeta">
+        <h2>Cola de atención</h2>
+        <p class="ayuda">Ordenada por nivel decidido, puntaje y hora de llegada. Los datos viven solo en esta pestaña: al cerrarla se borran.</p>
+        <div id="cola"></div>
+      </div>
+    </section>
+
+    <section id="vista-base" class="vista" hidden></section>
+    <section id="vista-arquitectura" class="vista" hidden></section>
+  </main>
+
+  <footer class="pie">
+    Ingeniería del Conocimiento, Universidad de Caldas, 2026-2. Niveles según la Resolución 5596 de 2015.
+  </footer>
+
+  <script src="js/conocimiento/variables.js"></script>
+  <script src="js/conocimiento/banderas.js"></script>
+  <script src="js/conocimiento/reglas.js"></script>
+  <script src="js/conocimiento/ontologia.js"></script>
+  <script src="js/conocimiento/expresiones.js"></script>
+  <script src="js/motor/difuso.js"></script>
+  <script src="js/motor/inferencia.js"></script>
+  <script src="js/motor/explicacion.js"></script>
+  <script src="datos/casos.js"></script>
+  <script src="js/ui/comun.js"></script>
+  <script src="js/ui/cola.js"></script>
+  <script src="js/ui/triaje.js"></script>
+  <script src="js/ui/base.js"></script>
+  <script src="js/ui/arquitectura.js"></script>
+</body>
+</html>

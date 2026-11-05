@@ -60,6 +60,19 @@ La expresión nunca cambia el resultado por sí sola: el sistema propone qué ac
 | "Me duele el pecho y se corre al brazo" | Síndrome coronario, dolor osteomuscular | Interrogatorio | Sin bandera de dolor torácico |
 | "Me siento raro" (agregada, no está en el enunciado) | Malestar menor, infección, síndrome coronario atípico | Preguntar por sudoración, náuseas, falta de aire | Sin bandera de síntomas atípicos |
 
+## Decisiones de diseño
+
+| Decisión | Motivo |
+|---|---|
+| Dos capas de reglas | Combinar 8 variables directamente exige demasiadas reglas. Los compromisos intermedios usan el lenguaje del art. 5 y hacen visible el encadenamiento. |
+| Triage I exige estado crítico | Según el art. 5.1, Triage I es riesgo vital. Sin compromiso neurológico, se exigen dos sistemas en estado crítico. |
+| Antecedentes solo suben la prioridad | Tomar una saturación baja como "normal para este paciente" puede ocultar un deterioro. Por eso una enfermedad pulmonar crónica no baja el nivel, a costa de algo de sobretriaje. |
+| Bandera de nivel IV para lesión menor | Una herida con signos normales necesita curación. Sin esta bandera quedaba en Triage V. |
+| Rangos por grupo etario | 150 lpm es grave en un adulto y normal en un lactante. |
+| Piso de seguridad | El centroide puede diluir una regla grave entre otras leves. |
+| Datos faltantes no se asumen normales | En zona rural puede faltar el equipo. Con 1 o 2 faltantes no se concluye Triage V; con 3 o más, el mínimo es III y el resultado es provisional. |
+| Sexo, vereda y escolaridad no son variables | No hay razón clínica para que cambien la prioridad en este modelo. |
+
 ## Fuentes
 
 - Mackway-Jones, K., Marsden, J., y Windle, J. (Eds.). (2014). *Emergency triage: Manchester Triage Group* (3.ª ed.). Wiley.
