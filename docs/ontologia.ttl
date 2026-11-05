@@ -1,0 +1,273 @@
+# Ontología básica de síntomas y urgencias. Generada desde prototipo/js/conocimiento.
+@prefix : <http://example.org/triaje-san-rafael#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://example.org/triaje-san-rafael> a owl:Ontology ;
+  rdfs:label "Triaje San Rafael"@es .
+
+:Paciente a owl:Class ;
+  rdfs:comment "Persona que consulta, identificada solo con un código temporal."@es .
+
+:GrupoEtario a owl:Class ;
+  rdfs:comment "Lactante, niño, adulto o adulto mayor. Cambia los rangos de los signos vitales."@es .
+
+:Manifestacion a owl:Class ;
+  rdfs:comment "Todo lo que se observa, mide o refiere en el paciente."@es .
+
+:Sintoma a owl:Class ;
+  rdfs:subClassOf :Manifestacion ;
+  rdfs:comment "Lo que el paciente refiere. Ejemplo: dolor o mareo."@es .
+
+:ExpresionColoquial a owl:Class ;
+  rdfs:subClassOf :Sintoma ;
+  rdfs:comment "Frase ambigua que requiere aclaración. Ejemplo: \"me dio un ataque\"."@es .
+
+:SignoVital a owl:Class ;
+  rdfs:subClassOf :Manifestacion ;
+  rdfs:comment "Medición objetiva: FC, FR, PAS, SpO₂ o temperatura."@es .
+
+:SignoObservado a owl:Class ;
+  rdfs:subClassOf :Manifestacion ;
+  rdfs:comment "Observación del personal: conciencia y trabajo respiratorio."@es .
+
+:BanderaRoja a owl:Class ;
+  rdfs:subClassOf :Manifestacion ;
+  rdfs:comment "Hallazgo que fija un nivel mínimo de urgencia."@es .
+
+:Antecedente a owl:Class ;
+  rdfs:comment "Enfermedad previa que solo puede aumentar la prioridad."@es .
+
+:Compromiso a owl:Class ;
+  rdfs:comment "Afectación de un sistema deducida por la capa 1."@es .
+
+:CompromisoRespiratorio a owl:Class ;
+  rdfs:subClassOf :Compromiso ;
+  rdfs:comment "Afectación de la ventilación u oxigenación."@es .
+
+:CompromisoHemodinamico a owl:Class ;
+  rdfs:subClassOf :Compromiso ;
+  rdfs:comment "Afectación de la circulación."@es .
+
+:CompromisoNeurologico a owl:Class ;
+  rdfs:subClassOf :Compromiso ;
+  rdfs:comment "Afectación del estado de conciencia."@es .
+
+:CompromisoSistemico a owl:Class ;
+  rdfs:subClassOf :Compromiso ;
+  rdfs:comment "Respuesta general, como fiebre o hipotermia."@es .
+
+:CargaDeDolor a owl:Class ;
+  rdfs:subClassOf :Compromiso ;
+  rdfs:comment "Intensidad del dolor como criterio de urgencia."@es .
+
+:NivelTriage a owl:Class ;
+  rdfs:comment "Categorías I a V de la Resolución 5596 de 2015."@es .
+
+:Regla a owl:Class ;
+  rdfs:comment "Regla difusa SI-ENTONCES de la base de conocimiento."@es .
+
+:FuenteConocimiento a owl:Class ;
+  rdfs:comment "Norma, guía clínica o enunciado del que sale una regla."@es .
+
+:DecisionClinica a owl:Class ;
+  rdfs:comment "Decisión final del profesional, que puede modificar la sugerencia."@es .
+
+:perteneceA a owl:ObjectProperty ;
+  rdfs:domain :Paciente ;
+  rdfs:range :GrupoEtario ;
+  rdfs:comment "Grupo de edad del paciente."@es .
+
+:presenta a owl:ObjectProperty ;
+  rdfs:domain :Paciente ;
+  rdfs:range :Manifestacion ;
+  rdfs:comment "Manifestaciones registradas."@es .
+
+:tieneAntecedente a owl:ObjectProperty ;
+  rdfs:domain :Paciente ;
+  rdfs:range :Antecedente ;
+  rdfs:comment "Enfermedades previas registradas."@es .
+
+:seAclaraCon a owl:ObjectProperty ;
+  rdfs:domain :ExpresionColoquial ;
+  rdfs:range :SignoVital ;
+  rdfs:comment "Medición que aclara la frase."@es .
+
+:evidencia a owl:ObjectProperty ;
+  rdfs:domain :Manifestacion ;
+  rdfs:range :Compromiso ;
+  rdfs:comment "La manifestación apoya el compromiso."@es .
+
+:sugiereNivel a owl:ObjectProperty ;
+  rdfs:domain :Compromiso ;
+  rdfs:range :NivelTriage ;
+  rdfs:comment "El compromiso orienta la prioridad."@es .
+
+:fijaNivelMinimo a owl:ObjectProperty ;
+  rdfs:domain :BanderaRoja ;
+  rdfs:range :NivelTriage ;
+  rdfs:comment "Piso de seguridad."@es .
+
+:tieneFuente a owl:ObjectProperty ;
+  rdfs:domain :Regla ;
+  rdfs:range :FuenteConocimiento ;
+  rdfs:comment "Origen de la regla."@es .
+
+:recibeNivel a owl:ObjectProperty ;
+  rdfs:domain :Paciente ;
+  rdfs:range :NivelTriage ;
+  rdfs:comment "Nivel sugerido por el sistema."@es .
+
+:confirmadoPor a owl:ObjectProperty ;
+  rdfs:domain :NivelTriage ;
+  rdfs:range :DecisionClinica ;
+  rdfs:comment "El profesional acepta o cambia el nivel."@es .
+
+:TriageI a :NivelTriage ;
+  rdfs:label "Triage I: Riesgo vital inmediato"@es .
+
+:TriageII a :NivelTriage ;
+  rdfs:label "Triage II: Posible deterioro rápido"@es .
+
+:TriageIII a :NivelTriage ;
+  rdfs:label "Triage III: Requiere estudio o tratamiento en urgencias"@es .
+
+:TriageIV a :NivelTriage ;
+  rdfs:label "Triage IV: Sin riesgo evidente, con riesgo de complicación"@es .
+
+:TriageV a :NivelTriage ;
+  rdfs:label "Triage V: Sin deterioro del estado general"@es .
+
+:paro a :BanderaRoja ;
+  rdfs:label "No respira o no tiene pulso"@es ;
+  :fijaNivelMinimo :TriageI .
+
+:via_aerea a :BanderaRoja ;
+  rdfs:label "Vía aérea obstruida (se ahoga, no pasa aire)"@es ;
+  :fijaNivelMinimo :TriageI .
+
+:convulsion_activa a :BanderaRoja ;
+  rdfs:label "Convulsión en este momento"@es ;
+  :fijaNivelMinimo :TriageI .
+
+:hemorragia_masiva a :BanderaRoja ;
+  rdfs:label "Sangrado que no para con presión"@es ;
+  :fijaNivelMinimo :TriageI .
+
+:dolor_toracico a :BanderaRoja ;
+  rdfs:label "Dolor de pecho que se corre al brazo, cuello o mandíbula"@es ;
+  :fijaNivelMinimo :TriageII .
+
+:coronario_atipico a :BanderaRoja ;
+  rdfs:label "Malestar en pecho o epigastrio con sudoración, náuseas o falta de aire"@es ;
+  :fijaNivelMinimo :TriageII .
+
+:confusion_trauma a :BanderaRoja ;
+  rdfs:label "Confusión o somnolencia nueva tras una caída o golpe en la cabeza"@es ;
+  :fijaNivelMinimo :TriageII .
+
+:deficit_neurologico a :BanderaRoja ;
+  rdfs:label "Cara torcida, debilidad de un lado o habla enredada, de inicio súbito"@es ;
+  :fijaNivelMinimo :TriageII .
+
+:convulsion_reciente a :BanderaRoja ;
+  rdfs:label "Convulsión reciente que ya cedió"@es ;
+  :fijaNivelMinimo :TriageII .
+
+:trauma_grave a :BanderaRoja ;
+  rdfs:label "Trauma grave (caída de altura, machete, accidente de vehículo)"@es ;
+  :fijaNivelMinimo :TriageII .
+
+:sangrado_abundante a :BanderaRoja ;
+  rdfs:label "Sangrado abundante ya controlado"@es ;
+  :fijaNivelMinimo :TriageII .
+
+:alarma_obstetrica a :BanderaRoja ;
+  rdfs:label "Embarazo con sangrado, dolor abdominal fuerte o convulsión"@es ;
+  :fijaNivelMinimo :TriageII .
+
+:letargo_nino a :BanderaRoja ;
+  rdfs:label "Niño letárgico: muy decaído, no despierta bien, no come"@es ;
+  :fijaNivelMinimo :TriageII .
+
+:anafilaxia a :BanderaRoja ;
+  rdfs:label "Reacción alérgica con hinchazón de labios o lengua"@es ;
+  :fijaNivelMinimo :TriageII .
+
+:plaguicidas a :BanderaRoja ;
+  rdfs:label "Intoxicación por plaguicidas u otro veneno"@es ;
+  :fijaNivelMinimo :TriageII .
+
+:mordedura a :BanderaRoja ;
+  rdfs:label "Mordedura de serpiente"@es ;
+  :fijaNivelMinimo :TriageII .
+
+:riesgo_suicida a :BanderaRoja ;
+  rdfs:label "Ideas o intento de hacerse daño"@es ;
+  :fijaNivelMinimo :TriageII .
+
+:fiebre_lactante a :BanderaRoja ;
+  rdfs:label "Lactante menor de 3 meses con 38 °C o más"@es ;
+  :fijaNivelMinimo :TriageII .
+
+:sincope a :BanderaRoja ;
+  rdfs:label "Desmayo reciente, ya recuperado"@es ;
+  :fijaNivelMinimo :TriageIII .
+
+:deshidratacion a :BanderaRoja ;
+  rdfs:label "Vómito o diarrea persistente, no tolera líquidos"@es ;
+  :fijaNivelMinimo :TriageIII .
+
+:embarazo a :BanderaRoja ;
+  rdfs:label "Embarazo con síntomas, sin signos de alarma"@es ;
+  :fijaNivelMinimo :TriageIII .
+
+:lesion_menor a :BanderaRoja ;
+  rdfs:label "Herida o lesión menor que necesita curación o sutura"@es ;
+  :fijaNivelMinimo :TriageIV .
+
+:diabetes a :Antecedente ;
+  rdfs:label "Diabetes"@es .
+
+:inmunosupresion a :Antecedente ;
+  rdfs:label "Defensas bajas (quimioterapia, VIH, trasplante, corticoides)"@es .
+
+:cardiaca a :Antecedente ;
+  rdfs:label "Enfermedad del corazón"@es .
+
+:renal a :Antecedente ;
+  rdfs:label "Enfermedad renal crónica"@es .
+
+:respiratoria_cronica a :Antecedente ;
+  rdfs:label "Enfermedad pulmonar crónica"@es .
+
+:expresion_dolor_leve a :ExpresionColoquial ;
+  rdfs:label "Me duele leve"@es .
+
+:expresion_fiebre_alta a :ExpresionColoquial ;
+  rdfs:label "Tengo fiebre alta"@es .
+
+:expresion_no_respira a :ExpresionColoquial ;
+  rdfs:label "No respira bien"@es .
+
+:expresion_decaido a :ExpresionColoquial ;
+  rdfs:label "Estoy decaído"@es .
+
+:expresion_presion a :ExpresionColoquial ;
+  rdfs:label "Se me subió la presión"@es .
+
+:expresion_ataque a :ExpresionColoquial ;
+  rdfs:label "Me dio un ataque"@es .
+
+:expresion_mareo a :ExpresionColoquial ;
+  rdfs:label "Tengo mareo"@es .
+
+:expresion_no_aguanto a :ExpresionColoquial ;
+  rdfs:label "No aguanto el dolor"@es .
+
+:expresion_malestar_vago a :ExpresionColoquial ;
+  rdfs:label "Me siento raro"@es .
+
+:expresion_pecho_brazo a :ExpresionColoquial ;
+  rdfs:label "Me duele el pecho y se corre al brazo"@es .

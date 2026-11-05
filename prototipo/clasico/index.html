@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Triaje San Rafael: versión clásica</title>
+  <link rel="stylesheet" href="../css/estilos.css">
+  <style>
+    tr.activa td { background: #123524; font-weight: 600; }
+    .seccion { margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <header class="cabecera">
+    <div class="marca">
+      <span class="marca-icono" aria-hidden="true">+</span>
+      <div>
+        <h1>Triaje San Rafael</h1>
+        <p>Versión clásica: base de conocimiento y reglas SI-ENTONCES nítidas</p>
+      </div>
+    </div>
+  </header>
+
+  <p class="aviso-clinico" role="note">
+    <strong>Herramienta de apoyo.</strong> No reemplaza la decisión clínica. Prototipo académico con cortes fijos para adultos.
+  </p>
+
+  <main>
+    <div class="dos-columnas">
+      <form id="formulario" class="tarjeta" novalidate>
+        <h2>Valoración</h2>
+        <h3>Datos medidos</h3>
+        <div id="campos" class="rejilla-campos"></div>
+        <h3>Banderas rojas</h3>
+        <div id="lista-banderas"></div>
+        <div class="acciones"><button type="submit" class="boton principal">Clasificar</button></div>
+      </form>
+
+      <div id="resultado" class="resultado" aria-live="polite">
+        <div class="tarjeta vacio"><h2>Resultado</h2><p>Llene los datos y pulse Clasificar. Se verá la regla que decidió el nivel.</p></div>
+      </div>
+    </div>
+
+    <div class="tarjeta seccion">
+      <h2>Limitación: el efecto escalón</h2>
+      <p class="ayuda" style="margin-top:6px">Mismo paciente adulto sano, cambiando solo una décima de grado. Con reglas nítidas, una diferencia mínima cambia el nivel. La lógica difusa resuelve esto con transiciones graduales.</p>
+      <div id="escalon"></div>
+    </div>
+
+    <div class="tarjeta seccion">
+      <h2>Reglas nítidas</h2>
+      <p class="ayuda" style="margin-top:6px">Se evalúan en orden y decide la primera que se cumple. La regla activa se resalta.</p>
+      <div class="tabla-marco"><table><thead><tr><th>Regla</th><th>Enunciado</th></tr></thead><tbody id="tabla-reglas"></tbody></table></div>
+    </div>
+
+    <div class="tarjeta seccion">
+      <h2>Base de conocimiento</h2>
+      <h3>Variables lingüísticas</h3>
+      <div class="tabla-marco"><table><thead><tr><th>Variable</th><th>Términos</th><th>Rangos por edad</th></tr></thead><tbody id="tabla-variables"></tbody></table></div>
+      <h3>Ontología</h3>
+      <ul id="ontologia" class="arbol"></ul>
+      <h3>Expresiones ambiguas del paciente</h3>
+      <div class="tabla-marco"><table><thead><tr><th>Expresión</th><th>Puede significar</th><th>Cómo aclararla</th></tr></thead><tbody id="tabla-expresiones"></tbody></table></div>
+    </div>
+  </main>
+
+  <footer class="pie">Ingeniería del Conocimiento, Universidad de Caldas, 2026-2. Niveles según la Resolución 5596 de 2015.</footer>
+
+  <script src="../js/conocimiento/variables.js"></script>
+  <script src="../js/conocimiento/banderas.js"></script>
+  <script src="../js/conocimiento/ontologia.js"></script>
+  <script src="../js/conocimiento/expresiones.js"></script>
+  <script src="reglas_si_entonces.js"></script>
+  <script src="interfaz.js"></script>
+</body>
+</html>
