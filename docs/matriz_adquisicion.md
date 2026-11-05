@@ -65,7 +65,7 @@ La expresión nunca cambia el resultado por sí sola: el sistema propone qué ac
 | Decisión | Motivo |
 |---|---|
 | Dos capas de reglas | Combinar 8 variables directamente exige demasiadas reglas. Los compromisos intermedios usan el lenguaje del art. 5 y hacen visible el encadenamiento. |
-| Triage I exige estado crítico | Según el art. 5.1, Triage I es riesgo vital. Sin compromiso neurológico, se exigen dos sistemas en estado crítico. |
+| Compromiso "grave" y "crítico" separados | En la primera validación, pacientes alertas con signos compensados llegaban a Triage I. Sin compromiso neurológico, Triage I ahora exige dos sistemas en estado crítico, como pide el art. 5.1. |
 | Antecedentes solo suben la prioridad | Tomar una saturación baja como "normal para este paciente" puede ocultar un deterioro. Por eso una enfermedad pulmonar crónica no baja el nivel, a costa de algo de sobretriaje. |
 | Bandera de nivel IV para lesión menor | Una herida con signos normales necesita curación. Sin esta bandera quedaba en Triage V. |
 | Rangos por grupo etario | 150 lpm es grave en un adulto y normal en un lactante. |

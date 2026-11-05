@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Triaje San Rafael: el sistema explicado</title>
+  <style>
+    :root {
+      --fondo: #090d16; --superficie: #111827; --superficie-2: #1a2333; --borde: #2a3446;
+      --texto: #f1f5f9; --suave: #a3afc2; --acento: #22b8cf; --violeta: #a78bfa;
+      --n1: #ef4444; --n2: #f97316; --n3: #eab308; --n4: #22c55e; --n5: #3b82f6;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+    body { margin: 0; background: var(--fondo); color: var(--texto); font: 17px/1.65 "Segoe UI", system-ui, -apple-system, Roboto, sans-serif; }
+    a { color: var(--acento); }
+    .marco { max-width: 1120px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 40px; }
+    header { padding: 56px 24px 32px; max-width: 1120px; margin: 0 auto; }
+    .sobretitulo { font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--acento); font-weight: 700; margin: 0 0 8px; }
+    h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.12; margin: 0 0 14px; }
+    .entrada { font-size: 1.15rem; color: var(--suave); max-width: 720px; margin: 0; }
+    .boton { display: inline-block; margin-top: 20px; padding: 9px 16px; border-radius: 8px; background: #0e7f91; color: #fff; font-weight: 600; text-decoration: none; }
+    .datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 28px; }
+    .dato { padding: 14px; background: var(--superficie); border: 1px solid var(--borde); border-radius: 12px; }
+    .dato strong { display: block; font-size: 1.6rem; line-height: 1.2; }
+    .dato span { font-size: .84rem; color: var(--suave); }
+    nav { position: sticky; top: 16px; align-self: start; font-size: .9rem; }
+    nav p { margin: 0 0 6px; font-weight: 700; color: var(--suave); font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; }
+    nav a { display: block; padding: 3px 0; color: var(--suave); text-decoration: none; }
+    nav a:hover { color: var(--acento); }
+    section { padding: 8px 0 32px; border-top: 1px solid var(--borde); }
+    section > .rotulo { font-size: .78rem; text-transform: uppercase; letter-spacing: .07em; color: var(--acento); font-weight: 700; margin: 20px 0 0; }
+    h2 { font-size: 1.65rem; line-height: 1.25; margin: 4px 0 12px; }
+    h3 { margin: 0 0 4px; font-size: 1rem; }
+    p { margin: 0 0 12px; }
+    .tarjetas { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 16px 0; }
+    .tarjeta { padding: 14px 16px; background: var(--superficie); border: 1px solid var(--borde); border-radius: 12px; font-size: .95rem; }
+    .tarjeta p { margin: 0; color: var(--suave); }
+    .tabla { overflow-x: auto; margin: 14px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    th { text-align: left; color: var(--suave); background: var(--superficie-2); font-size: .8rem; }
+    th, td { padding: 9px 11px; border-bottom: 1px solid var(--borde); vertical-align: top; }
+    .regla { padding: 14px 16px; margin: 14px 0; background: var(--superficie); border-left: 4px solid var(--violeta); border-radius: 8px; font-family: "Cascadia Mono", Consolas, monospace; font-size: .86rem; overflow-x: auto; }
+    .regla b { color: var(--acento); }
+    .flujo { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 16px 0; font-size: .88rem; }
+    .flujo span { padding: 6px 11px; background: var(--superficie-2); border: 1px solid var(--borde); border-radius: 8px; }
+    .flujo i { font-style: normal; color: var(--acento); }
+    .niveles { display: grid; gap: 6px; margin: 14px 0; }
+    .nivel { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 12px; align-items: center; padding: 8px 12px; background: var(--superficie); border-radius: 8px; border-left: 5px solid; font-size: .92rem; }
+    .nivel b { font-size: 1.1rem; }
+    .nota { padding: 12px 14px; margin: 14px 0; background: #2a2208; border: 1px solid #5a4a12; border-radius: 8px; color: #fde68a; font-size: .95rem; }
+    footer { padding: 24px; text-align: center; color: var(--suave); font-size: .85rem; border-top: 1px solid var(--borde); }
+    @media (max-width: 860px) {
+      .marco { display: block; padding: 0 16px; }
+      header { padding: 32px 16px 20px; }
+      nav { position: static; margin-bottom: 20px; }
+      nav a { display: inline-block; margin-right: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="sobretitulo">Ingeniería del Conocimiento · Proyecto 1</p>
+    <h1>Un sistema experto difuso para decidir a quién atender primero</h1>
+    <p class="entrada">En un centro de salud rural, "me duele leve" o "no respira bien" pueden significar cosas muy distintas. Este sistema convierte esa ambigüedad en conocimiento explicable, y deja la decisión en manos del personal de salud.</p>
+    <a class="boton" href="../prototipo/index.html">Abrir el prototipo</a>
+    <div class="datos">
+      <div class="dato"><strong>5</strong><span>niveles de la Res. 5596 de 2015</span></div>
+      <div class="dato"><strong>50</strong><span>reglas difusas en dos capas</span></div>
+      <div class="dato"><strong>22</strong><span>banderas rojas</span></div>
+      <div class="dato"><strong>20</strong><span>casos sintéticos de validación</span></div>
+    </div>
+  </header>
+
+  <div class="marco">
+    <nav aria-label="Contenido">
+      <p>Contenido</p>
+      <a href="#contexto">Contexto</a>
+      <a href="#que-hace">Qué hace</a>
+      <a href="#variables">Variables</a>
+      <a href="#reglas">Reglas</a>
+      <a href="#inferencia">Inferencia</a>
+      <a href="#explicacion">Explicación</a>
+      <a href="#resultados">Resultados</a>
+      <a href="#etica">Ética</a>
+      <a href="#limitaciones">Limitaciones</a>
+      <a href="#cierre">Cierre</a>
+    </nav>
+
+    <main>
+      <section id="contexto">
+        <p class="rotulo">Contexto</p>
+        <h2>Priorizar sin especialistas, a tres horas y media del hospital</h2>
+        <p>El Centro de Salud Rural San Rafael atiende a cerca de 7.800 personas de seis veredas, a unos 2.350 metros de altitud. Tiene dos enfermeras, un médico rural rotativo y un formato de triaje en papel. Ante casos complejos, el personal llama al hospital de referencia.</p>
+        <div class="tarjetas">
+          <div class="tarjeta"><h3>El problema</h3><p>Los criterios dependen de la experiencia y de protocolos escritos de forma general.</p></div>
+          <div class="tarjeta"><h3>La ambigüedad</h3><p>"Fiebre alta" puede ser una sensación o 38,5 °C medidos. "Ataque" puede ser una convulsión o un desmayo.</p></div>
+          <div class="tarjeta"><h3>La propuesta</h3><p>Tratar esa ambigüedad como insumo, con variables lingüísticas difusas y reglas explicables.</p></div>
+        </div>
+      </section>
+
+      <section id="que-hace">
+        <p class="rotulo">Qué hace</p>
+        <h2>Recibe signos y síntomas, sugiere un nivel y lo justifica</h2>
+        <p>El personal registra signos vitales, dolor, conciencia, trabajo respiratorio y banderas rojas. También puede escribir lo que dice el paciente. El sistema sugiere uno de los cinco niveles definidos por la Resolución 5596 de 2015 y muestra las reglas que lo sustentan.</p>
+        <div class="niveles">
+          <div class="nivel" style="border-color:var(--n1)"><b>I</b><span>Riesgo vital. Atención inmediata.</span></div>
+          <div class="nivel" style="border-color:var(--n2)"><b>II</b><span>Posible deterioro rápido. No debe superar 30 minutos.</span></div>
+          <div class="nivel" style="border-color:var(--n3)"><b>III</b><span>Requiere estudio o tratamiento en urgencias.</span></div>
+          <div class="nivel" style="border-color:var(--n4)"><b>IV</b><span>Sin riesgo evidente, con posible complicación.</span></div>
+          <div class="nivel" style="border-color:var(--n5)"><b>V</b><span>Sin deterioro del estado general. También recibe atención.</span></div>
+        </div>
+        <p>La resolución define estas categorías, pero no trae umbrales de signos vitales: cada institución define su método. Por eso los umbrales provienen de otras guías clínicas.</p>
+      </section>
+
+      <section id="variables">
+        <p class="rotulo">Variables difusas</p>
+        <h2>El mismo número no significa lo mismo para todos</h2>
+        <p>En lógica difusa, un valor puede pertenecer a la vez a varios conjuntos. Un dolor de 4/10 es en parte "leve" y en parte "moderado". Así se evitan los cortes bruscos: 37,9 °C y 38,0 °C no quedan en mundos distintos.</p>
+        <div class="tarjetas">
+          <div class="tarjeta"><h3>Ajuste por edad</h3><p>150 latidos por minuto son una alarma en un adulto y un valor normal en un lactante.</p></div>
+          <div class="tarjeta"><h3>Ajuste por altitud</h3><p>A 2.350 m, la saturación esperada es menor. Los cortes se interpolaron desde los valores de MinSalud y OPS para 2.200 y 2.600 m.</p></div>
+          <div class="tarjeta"><h3>Lo dicho y lo medido</h3><p>Si alguien dice "me duele leve" con signos de choque, el sistema lo señala.</p></div>
+        </div>
+      </section>
+
+      <section id="reglas">
+        <p class="rotulo">Reglas</p>
+        <h2>Dos capas para no perder el razonamiento</h2>
+        <p>La primera versión usaba reglas nítidas SI-ENTONCES con cortes fijos. Tenía un defecto: con 37,9 °C el paciente quedaba en Triage V y con 38,0 °C en Triage IV. La <a href="../prototipo/clasico/index.html">versión clásica</a> sigue disponible para comparar.</p>
+        <p>Combinar ocho variables directamente exigiría demasiadas reglas. Por eso hay una capa intermedia con los compromisos que menciona la norma: respiratorio, hemodinámico y neurológico, además del sistémico y la carga de dolor.</p>
+        <div class="regla"><b>R04</b> SI Saturación es baja Y Frecuencia respiratoria es alta<br>ENTONCES Compromiso respiratorio es grave</div>
+        <div class="regla"><b>R33</b> SI Compromiso respiratorio es grave o crítico<br>ENTONCES Triage II</div>
+        <p>Son 25 reglas en cada capa, y cada una conserva su fuente.</p>
+      </section>
+
+      <section id="inferencia">
+        <p class="rotulo">Inferencia</p>
+        <h2>Del signo vital a la prioridad</h2>
+        <div class="flujo">
+          <span>Datos del paciente</span><i>→</i><span>Fuzzificación</span><i>→</i><span>Compromisos</span><i>→</i><span>Reglas de prioridad</span><i>→</i><span>Agregación</span><i>→</i><span>Centroide</span><i>→</i><span>Piso de seguridad</span><i>→</i><span>Nivel sugerido</span>
+        </div>
+        <p>El motor usa inferencia Mamdani con encadenamiento hacia adelante. El centroide tiene un riesgo: puede promediar una regla grave con otras leves. En triaje, ese promedio puede ser peligroso.</p>
+        <p>Por eso existe un <strong>piso de seguridad</strong>: el nivel final nunca es menos urgente que el que imponga una bandera roja o una regla crítica muy activada. Y si falta un dato, no se asume normal: con faltantes no se concluye Triage V, y con tres o más el resultado es provisional.</p>
+      </section>
+
+      <section id="explicacion">
+        <p class="rotulo">Explicación</p>
+        <h2>Una sugerencia sin razones no sirve en la práctica clínica</h2>
+        <p>Como en MYCIN, el sistema experto médico de los años setenta, explicar es parte del producto. Cada resultado muestra la regla decisiva, su fuerza, el puntaje, los grados de pertenencia y lo que faltó medir.</p>
+        <div class="regla">La regla R37 tuvo fuerza 1.00: SI Carga de dolor es grave ENTONCES Triage II.<br>El centroide dio 60.9 sobre 100, que corresponde a Triage II.</div>
+      </section>
+
+      <section id="resultados">
+        <p class="rotulo">Resultados</p>
+        <h2>Reconoce la gravedad que conoce y falla en lo que no conoce</h2>
+        <div class="datos">
+          <div class="dato"><strong>70 %</strong><span>concordancia exacta (14 de 20)</span></div>
+          <div class="dato"><strong>0,84</strong><span>kappa ponderado</span></div>
+          <div class="dato"><strong>60 %</strong><span>sensibilidad en Triage I y II (6 de 10)</span></div>
+          <div class="dato"><strong>20 %</strong><span>subtriaje (4 de 20)</span></div>
+          <div class="dato"><strong>10 %</strong><span>sobretriaje (2 de 20)</span></div>
+          <div class="dato"><strong>&lt; 2 ms</strong><span>tiempo promedio</span></div>
+        </div>
+        <p style="margin-top:16px">Estas cifras son de la tercera validación. Los números no mejoraron de una ronda a otra, y esa es la lección más útil del proyecto.</p>
+        <div class="tabla"><table>
+          <thead><tr><th>Ronda</th><th>Concordancia</th><th>Sensibilidad I y II</th><th>Subtriaje</th><th>Qué reveló</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>90 %</td><td>100 %</td><td>0 %</td><td>Pacientes alertas llegaban a Triage I. Los casos se parecían a las reglas.</td></tr>
+            <tr><td>2</td><td>75 %</td><td>78 %</td><td>20 %</td><td>Faltaban síntomas coronarios atípicos, antecedentes y lesiones menores.</td></tr>
+            <tr><td>3</td><td>70 %</td><td>60 %</td><td>20 %</td><td>Faltan meningitis, preeclampsia y fiebre con defensas bajas, entre otras.</td></tr>
+          </tbody>
+        </table></div>
+        <p>Cada ronda se hizo más difícil a propósito, así que no son comparables. Los errores corregidos no volvieron: en los casos de rondas anteriores ya no hay subtriaje. Pero cada ronda nueva encontró presentaciones que ninguna regla describe.</p>
+        <p>Los tres Triage I acertaron. Los cuatro subtriajes fueron cuadros graves sin regla o bandera que los reconociera: un posible síndrome coronario sin dolor de pecho, una posible meningitis, una posible preeclampsia y fiebre durante una quimioterapia.</p>
+        <p>Sexo, vereda y escolaridad no cambiaron ningún resultado en 240 corridas, porque no son variables del sistema. Pero un sesgo puede entrar por otro lado: en la segunda ronda, una mujer con síntomas coronarios atípicos quedó en Triage IV porque la bandera describía la presentación típica.</p>
+        <p class="nota">Estas cifras no demuestran eficacia clínica. El equipo escribió las reglas y también fijó los niveles esperados, y ningún profesional de salud los revisó. Un subtriaje de 20 % y una sensibilidad de 60 % no serían aceptables en un sistema real.</p>
+      </section>
+
+      <section id="etica">
+        <p class="rotulo">Ética y práctica</p>
+        <h2>Si acierta, ¿por qué no dejar que decida solo?</h2>
+        <p>Porque el triaje implica juzgar a una persona, no solo sus números. El sistema no ve la apariencia del paciente ni conoce lo que no se le registró.</p>
+        <div class="tabla"><table>
+          <thead><tr><th>Pregunta</th><th>Problema de fondo</th><th>Respuesta del sistema</th></tr></thead>
+          <tbody>
+            <tr><td>¿Quién responde por un error?</td><td>Responsabilidad en decisiones asistidas</td><td>El profesional decide, y el cambio de nivel exige un motivo</td></tr>
+            <tr><td>¿Hasta dónde se puede confiar?</td><td>Uso fuera del dominio validado</td><td>Aviso permanente y resultado provisional cuando faltan datos</td></tr>
+            <tr><td>¿Cómo se protegen los datos?</td><td>Los datos de salud son sensibles</td><td>Sin nombres ni documentos, y solo en memoria</td></tr>
+            <tr><td>¿Trata igual a todos?</td><td>Sesgos por edad, cultura o forma de hablar</td><td>Rangos por edad y contraste con lo medido. El riesgo no desaparece</td></tr>
+            <tr><td>¿Puede dejar a alguien sin atención?</td><td>La norma prohíbe usar el triage para negarla</td><td>El Triage V indica expresamente que se atiende</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+      <section id="limitaciones">
+        <p class="rotulo">Limitaciones</p>
+        <h2>Lo que este prototipo todavía no es</h2>
+        <div class="tarjetas">
+          <div class="tarjeta"><h3>Sin validación clínica</h3><p>Reglas y casos no han sido revisados por médicos o enfermeras.</p></div>
+          <div class="tarjeta"><h3>Muestra pequeña</h3><p>Veinte casos sintéticos no alcanzan para medir el desempeño por grupo.</p></div>
+          <div class="tarjeta"><h3>Conocimiento incompleto</h3><p>Solo reconoce lo que está escrito. Sin expertos clínicos, la lista de presentaciones graves nunca estará completa.</p></div>
+          <div class="tarjeta"><h3>Rangos aproximados</h3><p>Los valores pediátricos y varios cortes son aproximaciones por confirmar.</p></div>
+          <div class="tarjeta"><h3>Sin memoria</h3><p>No guarda registros: al cerrar la página se borra la cola.</p></div>
+        </div>
+      </section>
+
+      <section id="cierre">
+        <p class="rotulo">Cierre</p>
+        <h2>Convertir palabras vagas en decisiones que se pueden revisar</h2>
+        <p>El aporte del proyecto no es automatizar el triaje, sino hacer explícito un conocimiento que hoy depende de la experiencia: qué significa cada expresión, qué datos la confirman y por qué un paciente pasa antes que otro. Ese conocimiento queda escrito, se puede discutir y se puede mejorar con el personal de salud. La validación también dejó claro su límite: un sistema experto no es mejor que el conocimiento que le entregaron, y por eso el experto humano sigue siendo indispensable.</p>
+        <a class="boton" href="../prototipo/index.html">Probar el prototipo</a>
+      </section>
+    </main>
+  </div>
+
+  <footer>Proyecto académico con datos sintéticos. No es una herramienta clínica validada.</footer>
+</body>
+</html>
